@@ -1,0 +1,110 @@
+module.exports = {
+    run: function () {
+        // 第一个塔楼的逻辑
+        var tower1 = Game.getObjectById('65e2f2ba123bc624c07bf75e');
+        if (tower1) {
+            console.log(tower1.pos); // 将塔楼的位置信息输出到控制台
+
+            // 找到所有损坏的 Rampart，但只有在 hits 低于 17000 时才修复
+            var damagedRamparts = tower1.room.find(FIND_STRUCTURES, {
+                filter: (structure) => structure.structureType === STRUCTURE_RAMPART && structure.hits < structure.hitsMax && structure.hits < 17000
+            });
+
+            // 修复所有损坏的 Rampart
+            for (var i = 0; i < damagedRamparts.length; i++) {
+                tower1.repair(damagedRamparts[i]);
+            }
+
+            // 找到所有损坏的 Container，但只有在 hits 低于 150000 时才修复
+            var damagedContainers = tower1.room.find(FIND_STRUCTURES, {
+                filter: (structure) => structure.structureType === STRUCTURE_CONTAINER && structure.hits < structure.hitsMax && structure.hits < 150000
+            });
+
+            // 修复所有损坏的 Container
+            for (var j = 0; j < damagedContainers.length; j++) {
+                tower1.repair(damagedContainers[j]);
+            }
+
+            // 找到所有损坏的 Road，但只有在 hits 低于 1000 时才修复
+            var damagedRoads = tower1.room.find(FIND_STRUCTURES, {
+                filter: (structure) => structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax && structure.hits < 1000
+            });
+
+            // 修复所有损坏的 Road
+            for (var k = 0; k < damagedRoads.length; k++) {
+                tower1.repair(damagedRoads[k]);
+            }
+
+            // 找到所有损坏的 Wall，但只有在 hits 低于 15000 时才修复
+            var damagedWalls = tower1.room.find(FIND_STRUCTURES, {
+                filter: (structure) => structure.structureType === STRUCTURE_WALL && structure.hits < structure.hitsMax && structure.hits < 15000
+            });
+
+            // 修复所有损坏的 Wall
+            for (var l = 0; l < damagedWalls.length; l++) {
+                tower1.repair(damagedWalls[l]);
+            }
+
+            // 找到最接近的敌对 Creep 进行攻击，放在最后
+            var closestHostile = tower1.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+            if (closestHostile) {
+                tower1.attack(closestHostile);
+            }
+
+            // 其他塔楼逻辑...
+        }
+
+        // 第二个塔楼的逻辑
+        var tower2 = Game.getObjectById('65cf7461703bce96f5988151');
+        if (tower2) {
+            console.log(tower2.pos); // 将塔楼的位置信息输出到控制台
+
+            // 找到所有损坏的 Rampart，但只有在 hits 低于 17000 时才修复
+            var damagedRamparts2 = tower2.room.find(FIND_STRUCTURES, {
+                filter: (structure) => structure.structureType === STRUCTURE_RAMPART && structure.hits < structure.hitsMax && structure.hits < 17000
+            });
+
+            // 修复所有损坏的 Rampart
+            for (var i = 0; i < damagedRamparts2.length; i++) {
+                tower2.repair(damagedRamparts2[i]);
+            }
+
+            // 找到所有损坏的 Container，但只有在 hits 低于 150000 时才修复
+            var damagedContainers2 = tower2.room.find(FIND_STRUCTURES, {
+                filter: (structure) => structure.structureType === STRUCTURE_CONTAINER && structure.hits < structure.hitsMax && structure.hits < 150000
+            });
+
+            // 修复所有损坏的 Container
+            for (var j = 0; j < damagedContainers2.length; j++) {
+                tower2.repair(damagedContainers2[j]);
+            }
+
+            // 找到所有损坏的 Road，但只有在 hits 低于 1500 时才修复
+            var damagedRoads2 = tower2.room.find(FIND_STRUCTURES, {
+                filter: (structure) => structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax && structure.hits < 1500
+            });
+
+            // 修复所有损坏的 Road
+            for (var k = 0; k < damagedRoads2.length; k++) {
+                tower2.repair(damagedRoads2[k]);
+            }
+
+            // 找到所有损坏的 Wall，但只有在 hits 低于 15000 时才修复
+            var damagedWalls2 = tower2.room.find(FIND_STRUCTURES, {
+                filter: (structure) => structure.structureType === STRUCTURE_WALL && structure.hits < structure.hitsMax && structure.hits < 15000
+            });
+
+            // 修复所有损坏的 Wall
+            for (var l = 0; l < damagedWalls2.length; l++) {
+                tower2.repair(damagedWalls2[l]);
+            }
+
+            // 找到最接近的敌对 Creep 进行攻击，放在最后
+            var closestHostile2 = tower2.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+            if (closestHostile2) {
+                tower2.attack(closestHostile2);
+            }
+          
+        }
+    }
+};

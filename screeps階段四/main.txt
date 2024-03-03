@@ -1,0 +1,88 @@
+var roleHarvester = require('./role.harvester');
+var roleUpgrader = require('./role.upgrader');
+var roleBuilder = require('./role.builder');
+var roleHarvester1 = require('./role.harvester1');
+var roleSoldier = require('./role.soldier');
+var roleTowerFiller = require('./role.towerfiller'); // 新增的TowerFiller角色
+var towerLogic = require('./tower');
+
+module.exports.loop = function () {
+    // Creep spawning logic
+    var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
+    var harvesters1 = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester1');
+    var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
+    var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+    var soldiers = _.filter(Game.creeps, (creep) => creep.memory.role == 'soldier');
+    var towerFillers = _.filter(Game.creeps, (creep) => creep.memory.role == 'towerfiller'); // 新增的TowerFiller角色
+    
+    // Harvester spawning logic,1 harvester 300
+    // 500//
+    if (harvesters1.length < 2) {
+        spawnCreep('harvester1', [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]);
+    }
+        // TowerFiller spawning logic
+    if (towerFillers.length < 1) {
+        spawnCreep('towerfiller', [WORK,WORK,CARRY, CARRY, MOVE, MOVE]);
+    }
+    // Builder spawning logic, one cost 400
+    if (builders.length < 3) {
+        spawnCreep('builder', [WORK, WORK, CARRY, CARRY, MOVE, MOVE]);
+    }
+    // Upgrader spawning logic, one upgrader cost 200
+    if (upgraders.length < 2) {
+        spawnCreep('upgrader', [WORK, CARRY, MOVE]);
+    }
+
+    // Soldier spawning logic, modify as needed,cost 300
+    if (soldiers.length < 2) {
+        spawnCreep('soldier', [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, RANGED_ATTACK,MOVE]);
+    }
+
+    if (harvesters.length < 5) {
+        spawnCreep('harvester', [WORK, WORK, CARRY, MOVE]);
+    }
+    // Execute roles for each creep
+    for (var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if (creep.memory.role == 'harvester') {
+            roleHarvester.run(creep);
+        } else if (creep.memory.role == 'harvester1') {
+            roleHarvester1.run(creep);
+        } else if (creep.memory.role == 'upgrader') {
+            roleUpgrader.run(creep);
+        } else if (creep.memory.role == 'builder') {
+            roleBuilder.run(creep);
+        } else if (creep.memory.role == 'soldier') {
+            roleSoldier(creep); // 修正這裡的函數名稱為roleSoldier.run
+        } else if (creep.memory.role == 'towerfiller') {
+            roleTowerFiller.run(creep);
+        }
+    }
+
+    // Tower logic
+    towerLogic.run();
+
+    // Update room sign
+    var roomName = 'W23S24';  // 替換成你的房間名稱
+    var newSign = 'hello you are welcome at here';  // 替換成你想要的標誌內容
+
+    if (Game.rooms[roomName]) {
+        var room = Game.rooms[roomName];
+
+        if (room.controller && room.controller.my) {
+            room.controller.sign = newSign;
+            console.log('Room sign updated successfully.');
+        } else {
+            console.log('Room not found or you do not own the controller.');
+        }
+    } else {
+        console.log('Room not found.');
+    }
+};
+
+// Spawn creep function
+function spawnCreep(role, body) {
+    var newName = role.charAt(0).toUpperCase() + role.slice(1) + Game.time;
+    console.log('Spawning new ' + role + ': ' + newName);
+    Game.spawns['Spawn1'].spawnCreep(body, newName, { memory: { role: role } });
+}

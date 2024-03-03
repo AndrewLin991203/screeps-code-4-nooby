@@ -1,0 +1,35 @@
+module.exports = function(creep) {
+    var targets = creep.room.find(FIND_HOSTILE_CREEPS, {
+        filter: function(c) {
+            return c.owner.username !== "Source Keeper";
+        }
+    });
+
+    if (targets.length > 0) {
+        var target = targets[0];
+
+        // 根據距離使用不同攻擊方法
+        if (creep.pos.inRangeTo(target, 1)) {
+            // 距離小於等於1，使用attack
+            if (creep.attack(target) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target);
+            }
+        } else {
+            // 距離大於1，使用ranged_attack
+            if (creep.rangedAttack(target) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target);
+            }
+        }
+    } else {
+        // 沒有敵人，返回到 soldierbase
+        var soldierbase = Game.flags['soldierbase']; // 假設你有一個名為 'soldierbase' 的旗幟
+        if (soldierbase) {
+            if (!creep.pos.inRangeTo(soldierbase.pos, 1)) {
+                // 需要移動到 soldierbase
+                creep.moveTo(soldierbase);
+            }
+        } else {
+            console.log('No soldierbase flag found!');
+        }
+    }
+};

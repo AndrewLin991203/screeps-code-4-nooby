@@ -1,0 +1,21 @@
+// findNewTarget.js
+
+function findNewTarget(creep) {
+    // 找到能量最少的 Spawn 或 Extension
+    var targets = creep.room.find(FIND_MY_STRUCTURES, {
+        filter: (structure) => {
+            return (structure.structureType === STRUCTURE_SPAWN || structure.structureType === STRUCTURE_EXTENSION) &&
+                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+        }
+    });
+
+    if (targets.length > 0) {
+        // 根據能量數量排序，取最少的
+        targets.sort((a, b) => a.store.getFreeCapacity(RESOURCE_ENERGY) - b.store.getFreeCapacity(RESOURCE_ENERGY));
+        return targets[0];
+    } else {
+        return null;
+    }
+}
+
+module.exports = findNewTarget;
